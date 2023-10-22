@@ -1,0 +1,43 @@
+ANSIBLE
+Lecture 1 - Introduction
+The main purpose of Ansible is to provision servers
+	We want to automate the process of configuring hosts
+	Ansible Control Host > It's basically a Ansible server
+		The ACH will make connections to the hosts via SSH
+			So the hosts don't need an Ansible agent running or installed
+	There isn't one way to use it
+		But there are best practices
+			It's doesn't require an ACH to function, for example
+				You could just use a Laptop with the scripts of play book
+				Or maybe put the script/playbook in a git repo so other computers can change certain parts of the code
+Lecture 2 - SSH Overview & Setup
+Ansible uses SSH(OpenSSH) to do it's provisioning
+	OpenSSH Server in every host is REQUIRED for Ansible to work
+		It's good to connect to each server using the ACH to answer the inicial "yes" prompt (Can be automated with Terraform?)
+			But there's a way to make Ansible automatic accept it
+	It's good practice to use a SSH key pair
+		A key makes it harder to someone to break
+		Use the command 'ssh-keygen -t ed25519 -C "My first key"' to generate a key
+			-t option makes possible to select the type of the key
+			-C option makes it possible to leave a comment in the key
+			You can select a passphrase to the key to make it more secure
+			It'll create two keys in the .ssh directory in $HOME
+				A private key, which you should never show anybody
+				A public key which is meant to be sent abroad
+		To add the key to the ssh server use the command 'ssh-copy-id -i ~/.ssh/id_ed25519.pub ip'
+			The -i option indicates the directory of the file
+		You can use the 'ssh-add' command to add the pass phrase to the SSH agent, and not have to type it again
+Lecture 3 - Setting up a Git Repository
+Create a public repo in Github and add your public ssh key pair to it
+	Use the command 'git clone git@github.com:TaldoBlade/ansible.git' to get it locally in your machine
+	Use the command 'git config --global user.name "TaldoBlade" to config your user in local git
+	Use the command 'git config --global user.email "rafaelcbarbosa97@gmail.com"
+		You can check what's configured reading the file '~/.gitconfig'
+		This configuration is necessary for commiting changes to the repo
+	git status going to list the changes
+	git diff FILE to show what files have changed
+	git add FILE > Take the changes of the files to commit it
+	git commit -m "updated read me file"
+	git push
+Lecture 4 - Running ad-hoc Commands
+
