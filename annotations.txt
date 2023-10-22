@@ -40,4 +40,22 @@ Create a public repo in Github and add your public ssh key pair to it
 	git commit -m "updated read me file"
 	git push
 Lecture 4 - Running ad-hoc Commands
-
+Now we need to install Ansible in the AHC
+	sudo apt update && sudo apt install ansible
+Create an inventory file that contains all the IP addresses of the hosts we're managing using Ansible
+	vim inventory
+		add the ip addresses. One per line
+	git add inventory > git commit > git push
+	'ansible all --key-file ~/.ssh/ansible -i inventory -m ping' to test if it's working
+		ansible all > runs the command against all hosts listed in the inventory
+		--key-file > specify the ssh key you want to use
+		-i inventory > specifies the inventory. In this case a local file called inventory
+		-m ping > specifies to use the module ping
+Create a config file, so you don't need to specify the inventory and ssh key everytime you use a command
+	vim ansible.cfg
+		Add the tag [defaults] first
+		Add 'inventory = ~/ansible/inventory' to specify the inventory you want to use
+		Add 'private_key_file = ~/.ssh/ansible' to specify the private key file
+'ansible all --list-hosts' > Lists all the current hosts
+'ansible all -m gather_facts' > Gather facts about the hosts
+	use the '--limit 192.168.1.64' option to only gather facts about one host
