@@ -59,3 +59,17 @@ Create a config file, so you don't need to specify the inventory and ssh key eve
 'ansible all --list-hosts' > Lists all the current hosts
 'ansible all -m gather_facts' > Gather facts about the hosts
 	use the '--limit 192.168.1.64' option to only gather facts about one host
+Lecture 5 - Running elevated ad-hoc
+'ansible all -m apt -a update_cache=true'
+	The '-a' option grants the hability to give an argument alongside the module we're using
+	This is a command similar to 'sudo apt update'
+		It's not going to work now because Ansible doesn't have root privileges
+			To fix that you can use the '--become --ask-become-pass' options in the command above
+	docs.ansible.com/ansible/latest/modules/apt_module.html > Learn more in the documentation
+'ansible all -m apt -a name=vim-nox --become --ask-become-pass'
+	This command is installing the vim-nox package using the '-a name=vim-nox' argument
+		You can check if it worked by reading the var/log/apt/history.log in which server
+'ansible all -m apt -a "name=snapd state=latest" --become --ask-become-pass'
+	we use the 'name=snapd state=lastest' argument to tell ansible to use the apt module and update the packet snapd
+'ansible all -m apt -a "upgrade=dist" --become --ask-become-pass'
+	use the 'upgrade=dist' argument to upgrade all the packages
