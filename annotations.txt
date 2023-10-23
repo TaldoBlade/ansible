@@ -107,4 +107,22 @@ Sometimes you're gonna work with servers running different distros
 				You could also use 'when: ansible_distribution in ["Debian", "Ubuntu"]' to specify multiple distros
 				Use multiple variables 'ansible_distribution == "CentOS" and ansible_distribution_version == "22.04"'
 		 	You can get the variables using the 'ansible all -m gather_facts --limit 192.168.1.64'
-
+Lecture 8 - Improving your Playbook
+It's important to clean up the playbook, to not only make it easier to read, but also improve the performance of ansible
+	The previous playbook could be simplified to:
+		 - name: install apache and php packages
+    		   package:
+      		   name:
+        	     - "{{ apache_package }}"
+                     - "{{ php_package }}"
+                   state: latest
+                   update_cache: yes
+		   	In this exemple we've declare the variables 'apache_package' and 'php_package'
+				Both of then were declared in the inventory file
+					server1@192.168.1.64 apache_package=apache2 php_package=libapache2-mod-php
+					server2@192.168.1.139 apache_package=apache2 php_package=libapache2-mod-php
+			Instead of having 2 tasks to install php and apache we've declared then both in 1 task using a list
+			We are updating the package manager using update_cache: yes, instead of a solo task for it
+			And instead of using the apt module, who wouldn't work in dnf, we use the 'package'
+				Which is a generic OS package manager
+					https://docs.ansible.com/ansible/latest/collections/ansible/builtin/package_module.html
