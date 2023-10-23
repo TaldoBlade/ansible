@@ -73,3 +73,38 @@ Lecture 5 - Running elevated ad-hoc
 	we use the 'name=snapd state=lastest' argument to tell ansible to use the apt module and update the packet snapd
 'ansible all -m apt -a "upgrade=dist" --become --ask-become-pass'
 	use the 'upgrade=dist' argument to upgrade all the packages
+Lecture 6 - Writing our first Playbook
+With a playbook we can define what state we want our servers to be in
+	YAML is the default language used to write playbooks
+	To run a playbook use the 'ansible-playbook --ask-become-pass install_apache.yml'
+	Start the file with '---' and then a blank space underneat(Spaces are very important in yaml)
+	Then define the hosts, in this case 'hosts: all' and 'become: true' to run as root
+	'tasks:' to signal the tasks you want do to with the playbook
+		'- name: update repository' to set a new task and give it a name
+		'apt:' selects the module you're using
+			'update_cache: yes' gives an argument to run with the module
+	Example of installing apache:
+		- name: install apache2 package
+		  apt:
+		    name: apache
+		    state:latest
+		You could remove this package by changing the state
+			'state: absent'
+Lecture 7 - The 'when' Conditional
+Differente playbook by the distro the host is using
+It's important to use 'git use' before starting to make changes to the files.
+	This is to make sure your working with the up-to-date repository
+Sometimes you're gonna work with servers running different distros
+	You can use the command 'cat /etc/os-release' to see which distro the server is running
+	So when you run the apt module, for exemple, in a red hat based distro it's going to fail
+		To fix this you can use a when condition in the playbook file, like this:
+			- name: update repository index
+			  apt:
+			    update_cache: yes
+		          when: ansible_distribution == "Ubuntu"
+		
+			Using this we can use the variable 'ansible_distribution' to chech if the distro is Ubuntu.
+				You could also use 'when: ansible_distribution in ["Debian", "Ubuntu"]' to specify multiple distros
+				Use multiple variables 'ansible_distribution == "CentOS" and ansible_distribution_version == "22.04"'
+		 	You can get the variables using the 'ansible all -m gather_facts --limit 192.168.1.64'
+
